@@ -2,7 +2,7 @@ name: Merge-forward skill branches
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 permissions:
   contents: write
@@ -26,13 +26,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Merge main into each feat branch
+      - name: Merge master into each feat branch
         id: merge
         run: |
           FAILED=""
           SUCCEEDED=""
 
-          mapfile -t FEAT_BRANCHES < <(gh pr list --base main --state OPEN --json headRefName --jq '.[].headRefName' | grep '^feat/' | sort -u)
+          mapfile -t FEAT_BRANCHES < <(gh pr list --base master --state OPEN --json headRefName --jq '.[].headRefName' | grep '^feat/' | sort -u)
 
           if [ -z "$FEAT_BRANCHES" ]; then
             echo "No feat branches with open PRs found."
@@ -46,7 +46,7 @@ jobs:
 
             git checkout -B "$BRANCH" "origin/$BRANCH"
 
-            if ! git merge main --no-edit; then
+            if ! git merge master --no-edit; then
               echo "::warning::Merge conflict in $BRANCH"
               git merge --abort || true
               FAILED="$FAILED $FEAT_NAME"
@@ -54,7 +54,7 @@ jobs:
             fi
 
             if git diff --quiet "origin/$BRANCH"; then
-              echo "$BRANCH is already up to date with main."
+              echo "$BRANCH is already up to date with master."
               SUCCEEDED="$SUCCEEDED $FEAT_NAME"
               continue
             fi
@@ -89,7 +89,7 @@ jobs:
             const failed = '${{ steps.merge.outputs.failed }}'.trim().split(/\s+/);
             const sha = context.sha.substring(0, 7);
             const body = [
-              `The merge-forward workflow failed to merge \`main\` (${sha}) into the following feat branches:`,
+              `The merge-forward workflow failed to merge \`master\` (${sha}) into the following feat branches:`,
               '',
               ...failed.map(s => `- \`feat/${s}\`: merge conflict or lint failure`),
               '',
@@ -97,13 +97,13 @@ jobs:
               '```bash',
               ...failed.map(s => [
                 `git checkout feat/${s}`,
-                `git merge main`,
+                `git merge master`,
                 `# resolve conflicts, then: git push`,
                 ''
               ]).flat(),
               '```',
               '',
-              `Triggered by push to main: ${context.sha}`
+              `Triggered by push to master: ${context.sha}`
             ].join('\n');
 
             await github.rest.issues.create({
@@ -127,7 +127,7 @@ jobs:
                 await github.rest.repos.createDispatchEvent({
                   owner: context.repo.owner,
                   repo,
-                  event_type: 'upstream-main-updated',
+                  event_type: 'upstream-master-updated',
                   client_payload: { sha: context.sha },
                 });
                 console.log(`Notified ${repo}`);

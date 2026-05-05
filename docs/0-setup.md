@@ -76,7 +76,8 @@ Caption: 12px / weight 400
 app/
 ├── (auth)/                 # Clerk catch-all routes
 │   ├── sign-in/[[...sign-in]]/page.tsx
-│   └── sign-up/[[...sign-up]]/page.tsx
+│   ├── sign-up/[[...sign-up]]/page.tsx
+│   └── sso-callback/[[...sso-callback]]/page.tsx
 ├── (dashboard)/            # Protected routes (middleware)
 ├── api/                    # Route handlers
 ├── globals.css             # Tailwind 4 tokens + base styles
@@ -98,10 +99,63 @@ providers/                 # Context providers (Auth, Theme, Query)
 
 ## Authentication (Clerk)
 
+Google OAuth only — sign-in and sign-up are the same flow. On first Google sign-in, an account is created automatically.
+
+### Required Routes
+
+```
+app/(auth)/
+├── sign-in/[[...sign-in]]/page.tsx   ← primary landing page
+├── sign-up/[[...sign-up]]/page.tsx   ← minimal stub (Clerk needs it mounted)
+└── sso-callback/[[...sso-callback]]/page.tsx  ← handles Google OAuth redirect
+```
+
+### Route Files
+
+```typescript
+// app/(auth)/sign-in/[[...sign-in]]/page.tsx
+import { SignIn } from '@clerk/nextjs'
+
+export default function SignInPage() {
+  return <SignIn />
+}
+```
+
+```typescript
+// app/(auth)/sign-up/[[...sign-up]]/page.tsx
+// Minimal stub — Clerk needs <SignUp> mounted for OAuth flow.
+// Disable Google for sign-up in Clerk Dashboard so this page shows no providers.
+import { SignUp } from '@clerk/nextjs'
+
+export default function SignUpPage() {
+  return <SignUp />
+}
+```
+
+```typescript
+// app/(auth)/sso-callback/[[...sso-callback]]/page.tsx
+'use client'
+
+import { useClerk } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
+export default function SSOCallbackPage() {
+  const { handleRedirectCallback } = useClerk()
+  const router = useRouter()
+
+  useEffect(() => {
+    handleRedirectCallback({})
+  }, [handleRedirectCallback])
+
+  return null
+}
+```
+
 ### Route Protection
 
 ```typescript
-// middleware.ts (Next.js 15) — or proxy.ts (Next.js 16)
+// proxy.ts (Next.js 16)
 import { clerkMiddleware } from '@clerk/nextjs/server';
 
 export default clerkMiddleware();
@@ -111,12 +165,11 @@ export const config = {
 };
 ```
 
-> **Note:** Next.js 16 renamed `middleware.ts` to `proxy.ts` (both work, old name deprecated). Use `proxy.ts` for new projects.
+All `/dashboard/**` routes require authentication. Landing and auth routes are public.
 
 ### Clerk v6 Auth Pattern
 
 ```typescript
-// All auth() calls must be awaited
 import { auth } from '@clerk/nextjs/server';
 
 export async function GET() {
@@ -126,9 +179,21 @@ export async function GET() {
 }
 ```
 
-- All `/dashboard/**` routes require authentication.
-- Landing page and `/sign-in/**`, `/sign-up/**` routes are public.
-- After sign-in, redirect to `/dashboard`.
+### Required Environment Variables
+
+```env
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/
+NEXT_PUBLIC_CLERK_SSO_CALLBACK_URL=/sso-callback
+```
+
+### Clerk Dashboard Configuration
+
+1. Go to **SSO connections** → configure Google OAuth.
+2. Optionally disable Google for sign-up so it only appears on the sign-in page. Sign-in and sign-up flow are otherwise identical for OAuth — the same Google button creates an account on first use.
+3. Set redirect URL to `/sso-callback`.
 
 ## Component Requirements
 
@@ -191,3 +256,4 @@ Every component **must** implement these states:
 - [ ] `params` and `searchParams` are awaited in all server components and route handlers.
 - [ ] If using Next.js 16: `proxy.ts` exists (or `middleware.ts` still present), parallel routes have `default.js`.
 - [ ] Clerk `auth()` is awaited everywhere — no sync `auth()` calls remaining.
+- [ ] `/sso-callback` route exists and `handleRedirectCallback` is wired up — OAuth redirect works end-to-end.

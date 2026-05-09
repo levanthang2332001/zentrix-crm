@@ -72,6 +72,24 @@ export const navGroups: NavGroup[] = [
             icon: 'download'
           }
         ]
+      },
+      {
+        title: 'Reward Hub',
+        url: '#',
+        icon: 'gift',
+        isActive: true,
+        items: [
+          {
+            title: 'Nhiệm Vụ',
+            url: '/dashboard/rewards/tasks',
+            icon: 'tasks'
+          },
+          {
+            title: 'Đổi Thưởng',
+            url: '/dashboard/rewards/redeem',
+            icon: 'sparkles'
+          }
+        ]
       }
       // {
       //   title: 'Workspaces',

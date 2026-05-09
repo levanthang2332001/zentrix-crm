@@ -88,9 +88,11 @@ import {
   IconVideo,
   IconCrown,
   IconDownload,
+  IconGift,
   IconHistory,
   IconLayoutGrid,
   IconLink,
+  IconListCheck,
   IconRefresh,
   IconX
 } from '@tabler/icons-react';
@@ -229,5 +231,7 @@ export const Icons = {
   layoutGrid: IconLayoutGrid,
   link: IconLink,
   history: IconHistory,
-  download: IconDownload
+  download: IconDownload,
+  gift: IconGift,
+  tasks: IconListCheck
 };

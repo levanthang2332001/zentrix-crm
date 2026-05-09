@@ -94,6 +94,7 @@ import {
   IconLink,
   IconListCheck,
   IconRefresh,
+  IconBook,
   IconX
 } from '@tabler/icons-react';
 
@@ -233,5 +234,6 @@ export const Icons = {
   history: IconHistory,
   download: IconDownload,
   gift: IconGift,
-  tasks: IconListCheck
+  tasks: IconListCheck,
+  book: IconBook
 };

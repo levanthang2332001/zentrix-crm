@@ -90,7 +90,7 @@ export const navGroups: NavGroup[] = [
             icon: 'sparkles'
           }
         ]
-      }
+      },
       // {
       //   title: 'Workspaces',
       //   url: '/dashboard/workspaces',
@@ -129,74 +129,92 @@ export const navGroups: NavGroup[] = [
       //   shortcut: ['c', 'c'],
       //   isActive: false,
       //   items: []
-      // }
-    ]
-  },
-  {
-    label: 'Elements',
-    items: [
+      // },
       {
-        title: 'Forms',
+        title: 'Tài nguyên',
         url: '#',
-        icon: 'forms',
+        icon: 'book',
         isActive: true,
         items: [
           {
-            title: 'Basic Form',
-            url: '/dashboard/forms/basic',
-            icon: 'forms',
-            shortcut: ['f', 'f']
+            title: 'Blog',
+            url: '/dashboard/resources/blog',
+            icon: 'post'
           },
           {
-            title: 'Multi-Step Form',
-            url: '/dashboard/forms/multi-step',
-            icon: 'forms'
-          },
-          {
-            title: 'Sheet & Dialog',
-            url: '/dashboard/forms/sheet-form',
-            icon: 'forms'
-          },
-          {
-            title: 'Advanced Patterns',
-            url: '/dashboard/forms/advanced',
-            icon: 'forms'
+            title: 'Tài liệu',
+            url: '/dashboard/resources/docs',
+            icon: 'book'
           }
         ]
-      },
-      {
-        title: 'React Query',
-        url: '/dashboard/react-query',
-        icon: 'code',
-        isActive: false,
-        items: []
-      },
-      {
-        title: 'Icons',
-        url: '/dashboard/elements/icons',
-        icon: 'palette',
-        isActive: false,
-        items: []
       }
     ]
   },
+  // {
+  //   label: 'Elements',
+  //   items: [
+  //     {
+  //       title: 'Forms',
+  //       url: '#',
+  //       icon: 'forms',
+  //       isActive: true,
+  //       items: [
+  //         {
+  //           title: 'Basic Form',
+  //           url: '/dashboard/forms/basic',
+  //           icon: 'forms',
+  //           shortcut: ['f', 'f']
+  //         },
+  //         {
+  //           title: 'Multi-Step Form',
+  //           url: '/dashboard/forms/multi-step',
+  //           icon: 'forms'
+  //         },
+  //         {
+  //           title: 'Sheet & Dialog',
+  //           url: '/dashboard/forms/sheet-form',
+  //           icon: 'forms'
+  //         },
+  //         {
+  //           title: 'Advanced Patterns',
+  //           url: '/dashboard/forms/advanced',
+  //           icon: 'forms'
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       title: 'React Query',
+  //       url: '/dashboard/react-query',
+  //       icon: 'code',
+  //       isActive: false,
+  //       items: []
+  //     },
+  //     {
+  //       title: 'Icons',
+  //       url: '/dashboard/elements/icons',
+  //       icon: 'palette',
+  //       isActive: false,
+  //       items: []
+  //     }
+  //   ]
+  // },
   {
     label: '',
     items: [
-      {
-        title: 'Pro',
-        url: '#',
-        icon: 'pro',
-        isActive: true,
-        items: [
-          {
-            title: 'Exclusive',
-            url: '/dashboard/exclusive',
-            icon: 'exclusive',
-            shortcut: ['e', 'e']
-          }
-        ]
-      },
+      // {
+      //   title: 'Pro',
+      //   url: '#',
+      //   icon: 'pro',
+      //   isActive: true,
+      //   items: [
+      //     {
+      //       title: 'Exclusive',
+      //       url: '/dashboard/exclusive',
+      //       icon: 'exclusive',
+      //       shortcut: ['e', 'e']
+      //     }
+      //   ]
+      // },
       {
         title: 'Account',
         url: '#',
@@ -221,6 +239,12 @@ export const navGroups: NavGroup[] = [
             icon: 'billing',
             shortcut: ['b', 'b'],
             access: { requireOrg: true }
+          },
+          {
+            title: 'Cài đặt',
+            url: '/dashboard/settings',
+            icon: 'settings',
+            shortcut: ['s', 's']
           },
           {
             title: 'Login',

@@ -45,6 +45,34 @@ export const navGroups: NavGroup[] = [
         shortcut: ['d', 'd'],
         items: []
       },
+      {
+        title: 'Hoàn Phí',
+        url: '#',
+        icon: 'refresh',
+        isActive: true,
+        items: [
+          {
+            title: 'Danh Sách',
+            url: '/dashboard/rebate/list',
+            icon: 'layoutGrid'
+          },
+          {
+            title: 'Liên Kết UID',
+            url: '/dashboard/rebate/link-uid',
+            icon: 'link'
+          },
+          {
+            title: 'Lịch Sử',
+            url: '/dashboard/rebate/history',
+            icon: 'history'
+          },
+          {
+            title: 'Rút Tiền',
+            url: '/dashboard/rebate/withdraw',
+            icon: 'download'
+          }
+        ]
+      }
       // {
       //   title: 'Workspaces',
       //   url: '/dashboard/workspaces',
@@ -60,30 +88,30 @@ export const navGroups: NavGroup[] = [
       //   items: [],
       //   access: { requireOrg: true }
       // },
-      {
-        title: 'Users',
-        url: '/dashboard/users',
-        icon: 'teams',
-        shortcut: ['u', 'u'],
-        isActive: false,
-        items: []
-      },
-      {
-        title: 'Kanban',
-        url: '/dashboard/kanban',
-        icon: 'kanban',
-        shortcut: ['k', 'k'],
-        isActive: false,
-        items: []
-      },
-      {
-        title: 'Chat',
-        url: '/dashboard/chat',
-        icon: 'chat',
-        shortcut: ['c', 'c'],
-        isActive: false,
-        items: []
-      }
+      // {
+      //   title: 'Users',
+      //   url: '/dashboard/users',
+      //   icon: 'teams',
+      //   shortcut: ['u', 'u'],
+      //   isActive: false,
+      //   items: []
+      // },
+      // {
+      //   title: 'Kanban',
+      //   url: '/dashboard/kanban',
+      //   icon: 'kanban',
+      //   shortcut: ['k', 'k'],
+      //   isActive: false,
+      //   items: []
+      // },
+      // {
+      //   title: 'Chat',
+      //   url: '/dashboard/chat',
+      //   icon: 'chat',
+      //   shortcut: ['c', 'c'],
+      //   isActive: false,
+      //   items: []
+      // }
     ]
   },
   {

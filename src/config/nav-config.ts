@@ -90,7 +90,7 @@ export const navGroups: NavGroup[] = [
             icon: 'sparkles'
           }
         ]
-      },
+      }
       // {
       //   title: 'Workspaces',
       //   url: '/dashboard/workspaces',
@@ -130,24 +130,6 @@ export const navGroups: NavGroup[] = [
       //   isActive: false,
       //   items: []
       // },
-      {
-        title: 'Tài nguyên',
-        url: '#',
-        icon: 'book',
-        isActive: true,
-        items: [
-          {
-            title: 'Blog',
-            url: '/dashboard/resources/blog',
-            icon: 'post'
-          },
-          {
-            title: 'Tài liệu',
-            url: '/dashboard/resources/docs',
-            icon: 'book'
-          }
-        ]
-      }
     ]
   },
   // {
@@ -253,6 +235,21 @@ export const navGroups: NavGroup[] = [
             icon: 'login'
           }
         ]
+      }
+    ]
+  },
+  {
+    label: 'Tài nguyên',
+    items: [
+      {
+        title: 'Blog',
+        url: '/dashboard/resources/blog',
+        icon: 'post'
+      },
+      {
+        title: 'Tài liệu',
+        url: '/dashboard/resources/docs',
+        icon: 'book'
       }
     ]
   }

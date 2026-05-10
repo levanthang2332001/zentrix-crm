@@ -34,7 +34,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
-import Image from 'next/image';
+import { Logo } from './logo';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -52,8 +52,8 @@ export default function AppSidebar() {
     <Sidebar collapsible='icon'>
       <SidebarHeader className='group-data-[collapsible=icon]:pt-4'>
         {/* <OrgSwitcher /> */}
-        <div className='w-full flex px-2 py-3 items-center'>
-          <Image src='/assets/logo.svg' alt='Zentrix Logo' width={120} height={120} />
+        <div className='flex w-full items-center px-2 py-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-0'>
+          <Logo />
         </div>
       </SidebarHeader>
       <SidebarContent className='overflow-x-hidden'>

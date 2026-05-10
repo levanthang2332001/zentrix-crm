@@ -18,7 +18,7 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
       <div className='relative hidden h-full flex-col p-10 lg:flex dark:border-r'>
         <div className='absolute inset-0 bg-sidebar' />
         <div className='text-sidebar-foreground relative z-20 flex items-center text-lg font-medium'>
-          <Image src='/assets/logo.svg' alt='Zentrix CRM Logo' width={150} height={150} />
+          <Image src='/assets/logo.svg' alt='Zentrix Logo' width={150} height={150} />
         </div>
         <InteractiveGridPattern
           className={cn(

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Learn more about Zentrix CRM and our mission.'
+  description: 'Learn more about Zentrix and our mission.'
 };
 
 export default function AboutPage() {

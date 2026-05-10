@@ -96,6 +96,7 @@ import {
   IconListCheck,
   IconRefresh,
   IconBook,
+  IconWallet,
   IconX
 } from '@tabler/icons-react';
 
@@ -237,5 +238,6 @@ export const Icons = {
   download: IconDownload,
   gift: IconGift,
   tasks: IconListCheck,
-  book: IconBook
+  book: IconBook,
+  wallet: IconWallet
 };

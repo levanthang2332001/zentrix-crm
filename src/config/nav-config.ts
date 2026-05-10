@@ -56,41 +56,36 @@ export const navGroups: NavGroup[] = [
             url: '/dashboard/rebate/list',
             icon: 'layoutGrid'
           },
-          {
-            title: 'Liên Kết UID',
-            url: '/dashboard/rebate/link-uid',
-            icon: 'link'
-          },
-          {
-            title: 'Lịch Sử',
-            url: '/dashboard/rebate/history',
-            icon: 'history'
-          },
+          // {
+          //   title: 'Lịch Sử',
+          //   url: '/dashboard/rebate/history',
+          //   icon: 'history'
+          // },
           {
             title: 'Rút Tiền',
             url: '/dashboard/rebate/withdraw',
             icon: 'download'
           }
         ]
-      },
-      {
-        title: 'Reward Hub',
-        url: '#',
-        icon: 'gift',
-        isActive: true,
-        items: [
-          {
-            title: 'Nhiệm Vụ',
-            url: '/dashboard/rewards/tasks',
-            icon: 'tasks'
-          },
-          {
-            title: 'Đổi Thưởng',
-            url: '/dashboard/rewards/redeem',
-            icon: 'sparkles'
-          }
-        ]
       }
+      // {
+      //   title: 'Reward Hub',
+      //   url: '#',
+      //   icon: 'gift',
+      //   isActive: true,
+      //   items: [
+      //     {
+      //       title: 'Nhiệm Vụ',
+      //       url: '/dashboard/rewards/tasks',
+      //       icon: 'tasks'
+      //     },
+      //     {
+      //       title: 'Đổi Thưởng',
+      //       url: '/dashboard/rewards/redeem',
+      //       icon: 'sparkles'
+      //     }
+      //   ]
+      // }
       // {
       //   title: 'Workspaces',
       //   url: '/dashboard/workspaces',
@@ -131,7 +126,7 @@ export const navGroups: NavGroup[] = [
       //   items: []
       // },
     ]
-  },
+  }
   // {
   //   label: 'Elements',
   //   items: [
@@ -180,77 +175,30 @@ export const navGroups: NavGroup[] = [
   //     }
   //   ]
   // },
-  {
-    label: '',
-    items: [
-      // {
-      //   title: 'Pro',
-      //   url: '#',
-      //   icon: 'pro',
-      //   isActive: true,
-      //   items: [
-      //     {
-      //       title: 'Exclusive',
-      //       url: '/dashboard/exclusive',
-      //       icon: 'exclusive',
-      //       shortcut: ['e', 'e']
-      //     }
-      //   ]
-      // },
-      {
-        title: 'Account',
-        url: '#',
-        icon: 'account',
-        isActive: true,
-        items: [
-          {
-            title: 'Profile',
-            url: '/dashboard/profile',
-            icon: 'profile',
-            shortcut: ['m', 'm']
-          },
-          {
-            title: 'Notifications',
-            url: '/dashboard/notifications',
-            icon: 'notification',
-            shortcut: ['n', 'n']
-          },
-          {
-            title: 'Billing',
-            url: '/dashboard/billing',
-            icon: 'billing',
-            shortcut: ['b', 'b'],
-            access: { requireOrg: true }
-          },
-          {
-            title: 'Cài đặt',
-            url: '/dashboard/settings',
-            icon: 'settings',
-            shortcut: ['s', 's']
-          },
-          {
-            title: 'Login',
-            shortcut: ['l', 'l'],
-            url: '/',
-            icon: 'login'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Tài nguyên',
-    items: [
-      {
-        title: 'Blog',
-        url: '/dashboard/resources/blog',
-        icon: 'post'
-      },
-      {
-        title: 'Tài liệu',
-        url: '/dashboard/resources/docs',
-        icon: 'book'
-      }
-    ]
-  }
+  // {
+  //   label: 'Cài đặt',
+  //   items: [
+  //     {
+  //       title: 'Cài đặt',
+  //       url: '/dashboard/settings',
+  //       icon: 'settings',
+  //       shortcut: ['s', 's']
+  //     }
+  //   ]
+  // },
+  // {
+  //   label: 'Tài nguyên',
+  //   items: [
+  //     {
+  //       title: 'Blog',
+  //       url: '/dashboard/resources/blog',
+  //       icon: 'post'
+  //     },
+  //     {
+  //       title: 'Tài liệu',
+  //       url: '/dashboard/resources/docs',
+  //       icon: 'book'
+  //     }
+  //   ]
+  // }
 ];

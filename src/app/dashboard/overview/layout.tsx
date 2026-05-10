@@ -66,11 +66,13 @@ export default function OverViewLayout({
               </Card>
             </div>
 
-            {area_stats}
+            {pie_stats}
           </div>
 
           <div className='col-span-1 lg:col-span-3'>{sales}</div>
         </div>
+
+        {bar_stats}
       </div>
     </PageContainer>
   );

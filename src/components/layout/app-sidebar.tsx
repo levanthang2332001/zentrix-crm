@@ -34,7 +34,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
-import { OrgSwitcher } from '../org-switcher';
+import Image from 'next/image';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -51,12 +51,15 @@ export default function AppSidebar() {
   return (
     <Sidebar collapsible='icon'>
       <SidebarHeader className='group-data-[collapsible=icon]:pt-4'>
-        <OrgSwitcher />
+        {/* <OrgSwitcher /> */}
+        <div className='w-full flex px-2 py-3 items-center'>
+          <Image src='/assets/logo.svg' alt='Zentrix Logo' width={120} height={120} />
+        </div>
       </SidebarHeader>
       <SidebarContent className='overflow-x-hidden'>
-        {filteredGroups.map((group) => (
-          <SidebarGroup key={group.label || 'ungrouped'} className='py-0'>
-            {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
+        {filteredGroups.map((group, index) => (
+          <SidebarGroup key={`${group.label}-${index}`} className='py-2'>
+            {/* {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>} */}
             <SidebarMenu>
               {group.items.map((item) => {
                 const Icon = item.icon ? Icons[item.icon] : Icons.logo;

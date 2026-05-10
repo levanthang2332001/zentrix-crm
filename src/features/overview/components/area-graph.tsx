@@ -9,9 +9,14 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
-import { Badge } from '@/components/ui/badge';
-import { Icons } from '@/components/icons';
 import React from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 
 const chartData = [
   { month: 'January', desktop: 342, mobile: 245 },
@@ -42,15 +47,22 @@ const chartConfig = {
 export function AreaGraph() {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>
-          Dotted Area Chart
-          <Badge variant='outline'>
-            <Icons.trendingUp />
-            -5.2%
-          </Badge>
-        </CardTitle>
-        <CardDescription>Showing total visitors for the last 6 months</CardDescription>
+      <CardHeader className='flex flex-row items-center justify-between'>
+        <div className='space-y-1'>
+          <CardTitle>Biểu đồ hoàn phí 3 tháng qua</CardTitle>
+          <CardDescription>Thống kê chi tiết hoàn phí giao dịch</CardDescription>
+        </div>
+        <Select defaultValue='3m'>
+          <SelectTrigger className='w-[80px]'>
+            <SelectValue placeholder='Select' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value='1m'>1M</SelectItem>
+            <SelectItem value='3m'>3M</SelectItem>
+            <SelectItem value='6m'>6M</SelectItem>
+            <SelectItem value='1y'>1Y</SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

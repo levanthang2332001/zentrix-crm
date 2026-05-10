@@ -1,5 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
+import { Icons } from '@/components/icons';
+import Link from 'next/link';
 
 const salesData = [
   {
@@ -42,9 +44,14 @@ const salesData = [
 export function RecentSales() {
   return (
     <Card className='h-full'>
-      <CardHeader>
-        <CardTitle>Recent Sales</CardTitle>
-        <CardDescription>You made 265 sales this month.</CardDescription>
+      <CardHeader className='flex flex-row items-center justify-between'>
+        <CardTitle>Giao dịch gần đây</CardTitle>
+        <Link
+          href='/dashboard/rebate'
+          className='flex items-center gap-1 text-sm font-medium text-primary hover:underline'
+        >
+          Xem tất cả <Icons.arrowRight className='h-4 w-4' />
+        </Link>
       </CardHeader>
       <CardContent>
         <div className='space-y-8'>

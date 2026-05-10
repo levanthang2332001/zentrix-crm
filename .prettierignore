@@ -1,7 +1,0 @@
-node_modules
-.next
-build
-out
-*.lock
-package-lock.json
-bun.lockb

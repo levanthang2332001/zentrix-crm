@@ -16,8 +16,19 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: {
+    default: 'Zentrix',
+    template: '%s | Zentrix'
+  },
+  description: 'Automated Rebate Platform - Safe & Transparent',
+  icons: {
+    icon: '/assets/icon.png',
+    shortcut: '/assets/icon.png',
+    apple: '/assets/icon.png'
+  },
+  keywords: ['Zentrix', 'Rebate Platform'],
+  authors: [{ name: 'Zentrix Team' }],
+  creator: 'Zentrix'
 };
 
 export const viewport: Viewport = {

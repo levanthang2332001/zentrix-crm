@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import SignUpViewPage from '@/features/auth/components/sign-up-view';
 
 export const metadata: Metadata = {
-  title: 'Zentrix CRM | Sign Up',
-  description: 'Sign Up page for Zentrix CRM.'
+  title: 'Sign Up',
+  description: 'Sign Up page for Zentrix.'
 };
 
 export default async function Page() {

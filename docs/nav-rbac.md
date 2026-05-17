@@ -1,10 +1,12 @@
-# Simplified Navigation RBAC System
+# Navigation RBAC System
 
 ## Overview
 
 This document explains the fully client-side RBAC (Role-Based Access Control) system for navigation items.
 
-**Key Insight**: Navigation visibility is UX only, not security. We can check everything client-side using Clerk's hooks!
+**Key Insight**: Navigation visibility is UX only, not security. We filter navigation items instantly client-side using Clerk's `useUser()` hook!
+
+---
 
 ## Architecture
 
@@ -15,165 +17,82 @@ This document explains the fully client-side RBAC (Role-Based Access Control) sy
 
 ### Why Client-Side?
 
-- **Navigation visibility is UX only** - Users can't bypass security by seeing/hiding nav items
-- **Clerk provides all data client-side** - `useOrganization()` gives us `membership.permissions` and `membership.role`
-- **Zero server calls** - Instant filtering, no loading states, no UI flashing
-- **Better performance** - No network latency, no async complexity
+- **Zero server calls** - Instant filtering, no loading states, no UI flashing.
+- **Better performance** - No network latency, no async complexity.
+- **Security model** - Navigation visibility is a UX helper. Actual resource and action security (API routes, Web3 contract calls) is checked on the server and smart-contract level.
 
-**Note**: For actual security (API routes, server actions, page protection), always use server-side checks.
+---
 
 ## Performance Characteristics
 
-### All Checks Are Synchronous
+### User Tiers and Permission Mapping
 
-✅ **requireOrg**: Client-side check using `useOrganization()`  
-✅ **permission**: Client-side check using `membership.permissions` array  
-✅ **role**: Client-side check using `membership.role`  
-⚠️ **plan/feature**: Requires server-side check (see below)
+The system categorizes users into three tiers, with deterministic permissions defined client-side in `src/hooks/use-nav.ts`:
 
-### Zero Server Calls
+- **F0** (Master IB / CM) — Highest tier, manages F1, F2, volumes, and rate configurations.
+- **F1** (Sub-IB) — Mid tier, manages F2 list and rates.
+- **F2** (Retail Trader) — Default tier, views own volume and claims rebates.
 
-- All navigation filtering happens synchronously
-- No loading states
-- No UI flashing
-- Instant results
+```typescript
+const TIER_PERMISSIONS: Record<string, string[]> = {
+  F0: ['f0:set_rate_f1', 'f0:view_f1_list', 'f0:view_f1_volumes', 'f0:view_f2_list', 'f0:view_f2_volumes'],
+  F1: ['f1:set_rate_f2', 'f1:view_f2_list', 'f1:view_f2_volumes'],
+  F2: ['f2:view_own_volume'],
+};
+```
+
+---
 
 ## Usage
 
 ### In `nav-config.ts`
 
+To restrict sidebar navigation items based on role (tier) or permission, configure the `access` property:
+
 ```typescript
 {
-  title: 'Teams',
-  url: '/dashboard/workspaces/team',
-  icon: 'userPen',
-  // Simple: requireOrg (client-side check, instant)
-  access: { requireOrg: true }
+  title: 'Withdrawals',
+  url: '/dashboard/rebate/withdraw',
+  icon: 'download',
+  // Accessible to all authenticated users
 }
 
 {
-  title: 'Admin Panel',
-  url: '/dashboard/admin',
-  icon: 'settings',
-  // All client-side checks - instant!
+  title: 'Sub-IB Management',
+  url: '/dashboard/rebate/sub-ib',
+  icon: 'users',
   access: {
-    requireOrg: true,
-    permission: 'org:admin:manage',  // Client-side from membership.permissions
-    role: 'admin'  // Client-side from membership.role
+    role: 'F0' // Only visible to Master IB (F0)
+  }
+}
+
+{
+  title: 'Commission Rates',
+  url: '/dashboard/rebate/rates',
+  icon: 'settings',
+  access: {
+    permission: 'f1:set_rate_f2' // Visible if user has the specific permission
+  }
 }
 ```
 
 ### In Components
 
-```typescript
-import { useFilteredNavItems } from '@/hooks/use-nav';
+Use the standard filtering hooks:
 
-function MyComponent() {
-  const filteredItems = useFilteredNavItems(navItems);
-  // filteredItems is automatically filtered based on RBAC
+```typescript
+import { useFilteredNavGroups } from '@/hooks/use-nav';
+import { navGroups } from '@/config/nav-config';
+
+function Sidebar() {
+  const filteredGroups = useFilteredNavGroups(navGroups);
+  // Contains only the groups/items that the user is authorized to see
 }
 ```
 
-### Plan/Feature Checks
-
-Plans and features require Clerk's `has()` function which is server-side only. Options:
-
-1. **Store in organization metadata** (recommended for navigation):
-
-   ```typescript
-   // In your organization setup
-   organization.publicMetadata.plan = 'pro';
-
-   // In nav-config.ts
-   access: {
-     requireOrg: true,
-     // Check metadata instead of plan
-   }
-   ```
-
-2. **Show item, protect at page level** (current approach):
-   - Navigation item is shown
-   - Page component checks server-side and redirects/shows error if needed
-
-3. **Use server action** (if you really need it):
-   - Only for navigation items that absolutely need plan/feature checks
-   - Most navigation items won't need this
-
-## Scalability
-
-### Adding New Items
-
-Just add to `nav-config.ts`:
-
-```typescript
-{
-  title: 'New Feature',
-  url: '/dashboard/new',
-  icon: 'star',
-  access: { plan: 'pro' }  // That's it!
-}
-```
-
-The system automatically:
-
-- Filters it in sidebar
-- Filters it in kbar
-- Handles async checks if needed
-- Handles sync checks immediately
-
-### Adding New Access Types
-
-1. Add to `PermissionCheck` interface in `src/app/actions/rbac.ts`
-2. Add check logic in `checkAccess()` function
-3. Update `use-nav.ts` to handle the new type
-
-## Comparison: Before vs After
-
-### Before (Overcomplicated)
-
-- 4 files with complex logic
-- Multiple hooks and utilities
-- Unclear data flow
-- Potential for bugs
-
-### After (Simplified)
-
-- 1 main hook file
-- Clear, linear logic
-- Easy to understand
-- Easy to maintain
+---
 
 ## Best Practices
 
-1. **Use `requireOrg: true` for simple cases** - It's instant and requires no server call
-2. **Combine checks when possible** - `{ requireOrg: true, permission: '...' }` is more efficient than separate checks
-3. **Avoid unnecessary checks** - Don't add `access` if the item should always be visible
-
-## Migration from Old System
-
-The old `visible` function still works for backward compatibility:
-
-```typescript
-// Old way (still works)
-visible: (context) => !!context?.organization;
-
-// New way (recommended)
-access: {
-  requireOrg: true;
-}
-```
-
-## Future Improvements
-
-Potential optimizations if needed:
-
-1. Cache permission checks (e.g., React Query)
-2. Prefetch permissions on app load
-3. Optimistic UI updates
-
-But for now, the current implementation is:
-
-- ✅ Simple
-- ✅ Fast
-- ✅ Scalable
-- ✅ Maintainable
+1. **Keep it simple** — Only add an `access` constraint if the item should be hidden from certain tiers.
+2. **UX only** — Remember that client-side RBAC is purely for a clean, customized user interface. Always enforce appropriate role checks on backend APIs and smart contracts.

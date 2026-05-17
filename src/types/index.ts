@@ -5,7 +5,6 @@ export interface PermissionCheck {
   plan?: string;
   feature?: string;
   role?: string;
-  requireOrg?: boolean;
 }
 
 export interface NavItem {

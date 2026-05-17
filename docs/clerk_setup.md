@@ -1,117 +1,56 @@
 # Clerk Setup Guide
 
-This guide covers the setup and configuration of Clerk features used in this starter template.
+This guide covers the setup and configuration of Clerk Authentication used in this template. 
 
-## Clerk Scopes Required
+The application is built as a **Single-user Web3 DApp**, where users sign in with their personal accounts using Clerk, link their decentralized wallet addresses, and claim or withdraw their trading rebates directly. Multi-tenant workspace management (Organizations) and subscription plans (Billing) are **not** required.
 
-- **Authentication** - User sign-in/sign-up and session management
-- **Organizations** - Multi-tenant workspace management (see setup below)
-- **Billing** - Organization-level subscription management (see setup below)
+---
 
-## Clerk Organizations Setup (Workspaces & Teams)
+## Clerk Setup Instructions
 
-This starter kit includes multi-tenant workspace management powered by **Clerk Organizations**. To enable this feature:
+To configure Clerk authentication for your local development:
 
-### Enable Organizations in Clerk Dashboard:
+### 1. Create a Clerk Application
+1. Go to the [Clerk Dashboard](https://dashboard.clerk.com).
+2. Create a new application (e.g., `Zentrix CRM`).
+3. Select the authentication methods you wish to support (e.g., Email, Google, GitHub).
 
-1. Go to [Clerk Dashboard](https://dashboard.clerk.com)
-2. Navigate to **configure**
-3. Click **Organizations settings**
-4. Configure default roles if needed in the roles and permissions.
+### 2. Configure Environment Variables
+Copy the keys from your Clerk Dashboard into your `.env.local` file:
 
-### Server-Side Permission Checks:
+```bash
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
 
-- This starter follows [Clerk's recommended patterns](https://clerk.com/blog/how-to-build-multitenant-authentication-with-clerk)
-
-### Navigation RBAC System:
-
-- Fully client-side navigation filtering using `useNav` hook
-- Supports `requireOrg`, `permission`, and `role` checks (all client-side, instant)
-- Configured in `src/config/nav-config.ts` with `access` properties
-- See `docs/nav-rbac.md` for detailed documentation
-
-### For more information, see:
-
-- [Clerk Organizations documentation](https://clerk.com/docs/organizations/overview)
-- [Multi-tenant authentication guide](https://clerk.com/blog/how-to-build-multitenant-authentication-with-clerk)
-
-## Clerk Billing Setup (Organization Subscriptions)
-
-This starter kit includes **Clerk Billing for B2B** to manage organization-level subscriptions. Plans and features are managed through the Clerk Dashboard, and the application checks access using Clerk's `has()` function.
-
-> [!WARNING]
-> Billing is currently in Beta and its APIs are experimental and may undergo breaking changes. To mitigate potential disruptions, we recommend pinning your SDK and `clerk-js` package versions.
-
-### Key Features:
-
-- Organization-level subscription management
-- Plan-based access control using `<Protect>` component
-- Feature-based authorization
-- Integrated Stripe payment processing
-- Server-side plan/feature checks using `has()` function
-
-### Billing Cost Structure:
-
-Clerk Billing costs **0.7% per transaction**, plus transaction fees which are paid directly to Stripe. Clerk Billing is **not** the same as Stripe Billing. Plans and pricing are managed directly through the Clerk Dashboard and won't sync with your existing Stripe products or plans. Clerk uses Stripe **only** for payment processing, so you don't need to set up Stripe Billing.
-
-### Setup Instructions:
-
-#### 1. Enable Billing:
-
-- Navigate to [Billing Settings](https://dashboard.clerk.com/~/billing/settings) in the Clerk Dashboard
-- Enable billing for your application
-- Choose payment gateway:
-  - **Clerk development gateway**: A shared **test** Stripe account for development instances. This allows developers to test and build Billing flows **in development** without needing to create and configure a Stripe account.
-  - **Stripe account**: Use your own Stripe account for production. **A Stripe account created for a development instance cannot be used for production**. You will need to create a separate Stripe account for your production environment.
-
-#### 2. Create Plans:
-
-- Navigate to [Plans page](https://dashboard.clerk.com/~/billing/plans) in the Clerk Dashboard
-- Select **Plans for Organizations** tab
-- Click **Add Plan** and create plans (e.g., `free`, `pro`, `team`)
-- Set pricing and billing intervals
-- Toggle **Publicly available** to show in `<PricingTable />` and `<OrganizationProfile />` components
-
-#### 3. Add Features to Plans:
-
-- You can add Features when creating a Plan, or add them later:
-  1. Navigate to the [Plans](https://dashboard.clerk.com/~/billing/plans) page
-  2. Select the Plan you'd like to add a Feature to
-  3. In the **Features** section, select **Add Feature**
-- Feature names in Clerk Dashboard should match what you check in code
-
-#### 4. Usage in Code:
-
-**Server-side checks using `has()`:**
-
-```typescript
-// Check if organization has a Plan
-const hasPremiumAccess = has({ plan: 'gold' });
-
-// Check if organization has a Feature
-const hasPremiumAccess = has({ feature: 'widgets' });
+# Authentication Redirect URLs
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/auth/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL="/auth/sign-up"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard/overview"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/dashboard/overview"
 ```
 
-The `has()` method is available on the auth object and checks if the Organization has been granted a specific type of access control (Role, Permission, Feature, or Plan) and returns a boolean value.
+---
 
-**Client-side protection using `<Protect>`:**
+## User Metadata & Tier-based RBAC
 
-```tsx
-<Protect
-  plan='bronze'
-  fallback={<p>Only subscribers to the Bronze plan can access this content.</p>}
->
-  <h1>Exclusive Bronze Content</h1>
-</Protect>
+This project uses Clerk's **User publicMetadata** to store decentralized wallet metadata and user tier roles client-side.
+
+### Available Tiers
+- **F0** (Master IB / CM) - Highest tier
+- **F1** (Direct Sub-IB) - Mid tier
+- **F2** (Retail Client / Trader) - Default tier
+
+### Setting a User Tier in Clerk Dashboard
+To test different tiers in development:
+1. Navigate to **Users** in the Clerk Dashboard.
+2. Select your test user.
+3. Scroll down to the **Metadata** section.
+4. Under **Public Metadata**, insert the following JSON block:
+
+```json
+{
+  "tier": "F0"
+}
 ```
 
-Or protect by Feature:
-
-```tsx
-<Protect
-  feature='premium_access'
-  fallback={<p>Only subscribers with the Premium Access feature can access this content.</p>}
->
-  <h1>Exclusive Premium Content</h1>
-</Protect>
-```
+Replace `"F0"` with `"F1"` or `"F2"` to verify sidebar navigation and permission-based route visibility dynamically.

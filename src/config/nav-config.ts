@@ -8,27 +8,15 @@ import { NavGroup } from '@/types';
  *
  * RBAC Access Control:
  * Each navigation item can have an `access` property that controls visibility
- * based on permissions, plans, features, roles, and organization context.
+ * based on permissions, roles, and user tier.
  *
  * Examples:
  *
- * 1. Require organization:
- *    access: { requireOrg: true }
+ * 1. Require specific permission:
+ *    access: { permission: 'f1:set_rate_f2' }
  *
- * 2. Require specific permission:
- *    access: { requireOrg: true, permission: 'org:teams:manage' }
- *
- * 3. Require specific plan:
- *    access: { plan: 'pro' }
- *
- * 4. Require specific feature:
- *    access: { feature: 'premium_access' }
- *
- * 5. Require specific role:
- *    access: { role: 'admin' }
- *
- * 6. Multiple conditions (all must be true):
- *    access: { requireOrg: true, permission: 'org:teams:manage', plan: 'pro' }
+ * 2. Require specific role (tier):
+ *    access: { role: 'F0' }
  *
  * Note: The `visible` function is deprecated but still supported for backward compatibility.
  * Use the `access` property for new items.
@@ -86,21 +74,7 @@ export const navGroups: NavGroup[] = [
       //     }
       //   ]
       // }
-      // {
-      //   title: 'Workspaces',
-      //   url: '/dashboard/workspaces',
-      //   icon: 'workspace',
-      //   isActive: false,
-      //   items: []
-      // },
-      // {
-      //   title: 'Teams',
-      //   url: '/dashboard/workspaces/team',
-      //   icon: 'teams',
-      //   isActive: false,
-      //   items: [],
-      //   access: { requireOrg: true }
-      // },
+
       // {
       //   title: 'Users',
       //   url: '/dashboard/users',

@@ -58,28 +58,10 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
               emailAddress: 'your_mail+clerk_test@example.com'
             }}
           />
-          <div className='text-muted-foreground space-y-2 px-8 text-center text-xs'>
-            <p>
-              This is an{' '}
-              <Link href='/about' className='hover:text-primary underline underline-offset-4'>
-                open-source project
-              </Link>{' '}
-              for demo purposes. Authentication is handled securely by Clerk.
-            </p>
-            <p>
-              <Link
-                href='https://github.com/kiranism/next-shadcn-dashboard-starter'
-                target='_blank'
-                className='hover:text-primary underline underline-offset-4'
-              >
-                View on GitHub
-              </Link>
-            </p>
-          </div>
           <p className='text-muted-foreground px-8 text-center text-sm'>
             By clicking continue, you agree to our{' '}
             <Link
-              href='https://www.zentrix.cash/#risk-warning'
+              href='https://www.zentrix.cash?ref=risk-warning'
               target='_blank'
               rel='noopener noreferrer'
               className='hover:text-primary underline underline-offset-4'
@@ -88,7 +70,7 @@ export default function SignUpViewPage({ stars }: { stars: number }) {
             </Link>{' '}
             and{' '}
             <Link
-              href='https://www.zentrix.cash/#privacy-policy'
+              href='https://www.zentrix.cash?ref=privacy-policy'
               target='_blank'
               rel='noopener noreferrer'
               className='hover:text-primary underline underline-offset-4'

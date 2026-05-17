@@ -41,7 +41,7 @@ export default function SignInViewPage() {
           <p className='text-muted-foreground px-8 text-center text-sm'>
             By clicking continue, you agree to our{' '}
             <Link
-              href='https://www.zentrix.cash/#risk-warning'
+              href='https://www.zentrix.cash?ref=risk-warning'
               target='_blank'
               rel='noopener noreferrer'
               className='hover:text-primary underline underline-offset-4'
@@ -50,7 +50,7 @@ export default function SignInViewPage() {
             </Link>{' '}
             and{' '}
             <Link
-              href='https://www.zentrix.cash/#privacy-policy'
+              href='https://www.zentrix.cash?ref=privacy-policy'
               target='_blank'
               rel='noopener noreferrer'
               className='hover:text-primary underline underline-offset-4'

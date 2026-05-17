@@ -716,7 +716,7 @@ class FeatureCleanup {
 
   cleanEnvVars(feature) {
     if (!feature.envVars?.length) return;
-    const envFiles = ['.env.local', '.env.example', '.env', 'env.example.txt'];
+    const envFiles = ['.env.local', '.env.example', '.env'];
 
     for (const envFile of envFiles) {
       const envPath = path.join(ROOT, envFile);

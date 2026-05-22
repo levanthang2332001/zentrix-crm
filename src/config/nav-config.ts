@@ -44,15 +44,58 @@ export const navGroups: NavGroup[] = [
             url: '/dashboard/rebate/list',
             icon: 'layoutGrid'
           },
-          // {
-          //   title: 'Lịch Sử',
-          //   url: '/dashboard/rebate/history',
-          //   icon: 'history'
-          // },
+          {
+            title: 'Lịch Sử Claims',
+            url: '/dashboard/history/claims',
+            icon: 'history'
+          },
+          {
+            title: 'Biến Động Số Dư',
+            url: '/dashboard/history/events',
+            icon: 'page'
+          },
           {
             title: 'Rút Tiền',
             url: '/dashboard/rebate/withdraw',
             icon: 'download'
+          }
+        ]
+      },
+      {
+        title: 'Mạng Lưới',
+        url: '#',
+        icon: 'teams',
+        isActive: true,
+        items: [
+          {
+            title: 'Thành Viên',
+            url: '/dashboard/network',
+            icon: 'teams'
+          },
+          {
+            title: 'Sơ Đồ Cây',
+            url: '/dashboard/network/tree',
+            icon: 'galleryVerticalEnd',
+            access: { role: ['F0', 'F1'] }
+          }
+        ]
+      },
+      {
+        title: 'Cài Đặt Rebate',
+        url: '#',
+        icon: 'adjustments',
+        isActive: true,
+        items: [
+          {
+            title: 'Tỷ Lệ Của Tôi',
+            url: '/dashboard/rate',
+            icon: 'billing'
+          },
+          {
+            title: 'Set Tỷ Lệ Downline',
+            url: '/dashboard/rate/set',
+            icon: 'settings',
+            access: { role: ['F0', 'F1'] }
           }
         ]
       }

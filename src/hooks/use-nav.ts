@@ -62,7 +62,8 @@ export function useFilteredNavItems(items: NavItem[]) {
 
         // Check required tier role
         if (item.access.role) {
-          if (accessContext.tier !== item.access.role) {
+          const roles = Array.isArray(item.access.role) ? item.access.role : [item.access.role];
+          if (!roles.includes(accessContext.tier)) {
             return false;
           }
         }
@@ -87,7 +88,10 @@ export function useFilteredNavItems(items: NavItem[]) {
 
             // Check required tier role
             if (childItem.access.role) {
-              if (accessContext.tier !== childItem.access.role) {
+              const childRoles = Array.isArray(childItem.access.role)
+                ? childItem.access.role
+                : [childItem.access.role];
+              if (!childRoles.includes(accessContext.tier)) {
                 return false;
               }
             }

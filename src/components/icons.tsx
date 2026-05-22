@@ -238,6 +238,7 @@ export const Icons = {
   download: IconDownload,
   gift: IconGift,
   tasks: IconListCheck,
+  listCheck: IconListCheck,
   book: IconBook,
   wallet: IconWallet
 };

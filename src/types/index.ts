@@ -4,7 +4,7 @@ export interface PermissionCheck {
   permission?: string;
   plan?: string;
   feature?: string;
-  role?: string;
+  role?: string | string[];
 }
 
 export interface NavItem {

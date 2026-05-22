@@ -1,0 +1,116 @@
+{
+  "members": [
+    {
+      "userId": "usr_f1_01",
+      "email": "alex.sub-ib@zentrix.com",
+      "tier": "F1",
+      "walletAddress": "0x3c4f...8821",
+      "registeredAt": "2026-04-22T16:30:05.000Z",
+      "totalVolume": "150,000.00",
+      "rebatesEarned": "1,500.00"
+    },
+    {
+      "userId": "usr_f1_02",
+      "email": "jane.partner@zentrix.com",
+      "tier": "F1",
+      "walletAddress": "0x7e2c...11a9",
+      "registeredAt": "2026-04-27T16:30:05.000Z",
+      "totalVolume": "95,000.00",
+      "rebatesEarned": "950.00"
+    },
+    {
+      "userId": "usr_f2_01",
+      "email": "retail.trader1@gmail.com",
+      "tier": "F2",
+      "walletAddress": "0x99a2...bb12",
+      "registeredAt": "2026-05-07T16:30:05.000Z",
+      "totalVolume": "24,500.00",
+      "rebatesEarned": "245.00"
+    },
+    {
+      "userId": "usr_f2_02",
+      "email": "retail.trader2@yahoo.com",
+      "tier": "F2",
+      "walletAddress": "0x1a8f...ee43",
+      "registeredAt": "2026-05-12T16:30:05.000Z",
+      "totalVolume": "12,000.00",
+      "rebatesEarned": "120.00"
+    },
+    {
+      "userId": "usr_f2_03",
+      "email": "pro.scalper@zentrix.com",
+      "tier": "F2",
+      "walletAddress": "0xbb82...77f1",
+      "registeredAt": "2026-05-17T16:30:05.000Z",
+      "totalVolume": "88,000.00",
+      "rebatesEarned": "880.00"
+    }
+  ],
+  "referralLink": "https://zentrix-crm.io/register?ref=ZENTRIX_USER",
+  "stats": {
+    "f1Count": 2,
+    "f2Count": 3,
+    "totalVolume": "369,500.00",
+    "totalEarned": "3,695.00"
+  },
+  "tree": {
+    "userId": "usr_f0_me",
+    "email": "master.ib@zentrix.com",
+    "tier": "F0",
+    "walletAddress": "0x9a8b...1a0b",
+    "registeredAt": "2026-02-22T16:30:05.000Z",
+    "totalVolume": "520,000.00",
+    "rebatesEarned": "5,200.00",
+    "children": [
+      {
+        "userId": "usr_f1_01",
+        "email": "alex.sub-ib@zentrix.com",
+        "tier": "F1",
+        "walletAddress": "0x3c4f...8821",
+        "registeredAt": "2026-04-22T16:30:05.000Z",
+        "totalVolume": "150,000.00",
+        "rebatesEarned": "1,500.00",
+        "children": [
+          {
+            "userId": "usr_f2_01",
+            "email": "retail.trader1@gmail.com",
+            "tier": "F2",
+            "walletAddress": "0x99a2...bb12",
+            "registeredAt": "2026-05-07T16:30:05.000Z",
+            "totalVolume": "24,500.00",
+            "rebatesEarned": "245.00"
+          },
+          {
+            "userId": "usr_f2_02",
+            "email": "retail.trader2@yahoo.com",
+            "tier": "F2",
+            "walletAddress": "0x1a8f...ee43",
+            "registeredAt": "2026-05-12T16:30:05.000Z",
+            "totalVolume": "12,000.00",
+            "rebatesEarned": "120.00"
+          }
+        ]
+      },
+      {
+        "userId": "usr_f1_02",
+        "email": "jane.partner@zentrix.com",
+        "tier": "F1",
+        "walletAddress": "0x7e2c...11a9",
+        "registeredAt": "2026-04-27T16:30:05.000Z",
+        "totalVolume": "95,000.00",
+        "rebatesEarned": "950.00",
+        "children": [
+          {
+            "userId": "usr_f2_03",
+            "email": "pro.scalper@zentrix.com",
+            "tier": "F2",
+            "walletAddress": "0xbb82...77f1",
+            "registeredAt": "2026-05-17T16:30:05.000Z",
+            "totalVolume": "88,000.00",
+            "rebatesEarned": "880.00"
+          }
+        ]
+      }
+    ]
+  }
+}

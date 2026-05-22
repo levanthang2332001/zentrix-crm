@@ -1,0 +1,119 @@
+{
+  "claims": [
+    {
+      "claimId": "CLM_99012",
+      "amount": "1,450.00",
+      "walletAddress": "0x3c4f...8821",
+      "txHash": "0x3b8d4e5f2a1c9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d",
+      "status": "claimed",
+      "requestedAt": "2026-05-20T16:30:05.000Z",
+      "completedAt": "2026-05-20T16:30:50.000Z",
+      "broker": "Exness"
+    },
+    {
+      "claimId": "CLM_98451",
+      "amount": "950.00",
+      "walletAddress": "0x7e2c...11a9",
+      "txHash": "0x7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f",
+      "status": "claimed",
+      "requestedAt": "2026-05-17T16:30:05.000Z",
+      "completedAt": "2026-05-17T16:30:40.000Z",
+      "broker": "XM Global"
+    },
+    {
+      "claimId": "CLM_97812",
+      "amount": "245.00",
+      "walletAddress": "0x99a2...bb12",
+      "txHash": "0x1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c",
+      "status": "claimed",
+      "requestedAt": "2026-05-14T16:30:05.000Z",
+      "completedAt": "2026-05-14T16:30:55.000Z",
+      "broker": "Exness"
+    },
+    {
+      "claimId": "CLM_96504",
+      "amount": "120.00",
+      "walletAddress": "0x1a8f...ee43",
+      "txHash": "0x9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d",
+      "status": "failed",
+      "requestedAt": "2026-05-10T16:30:05.000Z",
+      "broker": "XM Global"
+    },
+    {
+      "claimId": "CLM_95321",
+      "amount": "880.00",
+      "walletAddress": "0xbb82...77f1",
+      "txHash": "0xf9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8",
+      "status": "expired",
+      "requestedAt": "2026-05-02T16:30:05.000Z",
+      "broker": "IC Markets"
+    }
+  ],
+  "events": [
+    {
+      "eventId": "EVT_0099812",
+      "tradeVolume": "100,000.00",
+      "totalRebate": "1,000.00",
+      "broker": "Exness",
+      "asset": "XAUUSD",
+      "timestamp": "2026-05-22T22:30:00.000Z",
+      "splits": {
+        "f0": { "email": "master.ib@zentrix.com", "amount": "200.00", "percentage": 20 },
+        "f1": { "email": "alex.sub-ib@zentrix.com", "amount": "300.00", "percentage": 30 },
+        "f2": { "email": "retail.trader1@gmail.com", "amount": "500.00", "percentage": 50 }
+      }
+    },
+    {
+      "eventId": "EVT_0099745",
+      "tradeVolume": "50,000.00",
+      "totalRebate": "500.00",
+      "broker": "XM Global",
+      "asset": "EURUSD",
+      "timestamp": "2026-05-22T19:30:00.000Z",
+      "splits": {
+        "f0": { "email": "master.ib@zentrix.com", "amount": "100.00", "percentage": 20 },
+        "f1": { "email": "jane.partner@zentrix.com", "amount": "150.00", "percentage": 30 },
+        "f2": { "email": "pro.scalper@zentrix.com", "amount": "250.00", "percentage": 50 }
+      }
+    },
+    {
+      "eventId": "EVT_0099682",
+      "tradeVolume": "20,000.00",
+      "totalRebate": "200.00",
+      "broker": "Exness",
+      "asset": "GBPUSD",
+      "timestamp": "2026-05-22T11:30:00.000Z",
+      "splits": {
+        "f0": { "email": "master.ib@zentrix.com", "amount": "40.00", "percentage": 20 },
+        "f1": { "email": "alex.sub-ib@zentrix.com", "amount": "60.00", "percentage": 30 },
+        "f2": { "email": "retail.trader2@yahoo.com", "amount": "100.00", "percentage": 50 }
+      }
+    },
+    {
+      "eventId": "EVT_0099511",
+      "tradeVolume": "85,000.00",
+      "totalRebate": "850.00",
+      "broker": "IC Markets",
+      "asset": "BTCUSD",
+      "timestamp": "2026-05-21T23:30:00.000Z",
+      "splits": {
+        "f0": { "email": "master.ib@zentrix.com", "amount": "170.00", "percentage": 20 },
+        "f1": { "email": "jane.partner@zentrix.com", "amount": "255.00", "percentage": 30 },
+        "f2": { "email": "pro.scalper@zentrix.com", "amount": "425.00", "percentage": 50 }
+      }
+    },
+    {
+      "eventId": "EVT_0099419",
+      "tradeVolume": "12,500.00",
+      "totalRebate": "125.00",
+      "broker": "XM Global",
+      "asset": "XAUUSD",
+      "timestamp": "2026-05-19T23:30:00.000Z",
+      "splits": {
+        "f0": { "email": "master.ib@zentrix.com", "amount": "25.00", "percentage": 20 },
+        "f1": { "email": "alex.sub-ib@zentrix.com", "amount": "37.50", "percentage": 30 },
+        "f2": { "email": "retail.trader1@gmail.com", "amount": "62.50", "percentage": 50 }
+      }
+    }
+  ]
+}

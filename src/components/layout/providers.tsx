@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import React from 'react';
 import { ActiveThemeProvider } from '../themes/active-theme';
 import QueryProvider from './query-provider';
+import RebateNotificationEngine from './rebate-notification-engine';
 
 export default function Providers({
   activeThemeValue,
@@ -37,7 +38,10 @@ export default function Providers({
             }
           }}
         >
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <RebateNotificationEngine />
+          </QueryProvider>
         </ClerkProvider>
       </ActiveThemeProvider>
     </>

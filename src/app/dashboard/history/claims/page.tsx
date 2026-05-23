@@ -22,6 +22,75 @@ export default function ClaimsHistoryPage() {
   const [selectedBroker, setSelectedBroker] = useState<string>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
 
+  // Web3 States
+  const [walletState, setWalletState] = useState<'disconnected' | 'connecting' | 'connected'>(
+    'disconnected'
+  );
+  const [walletAddress, setWalletAddress] = useState<string>('');
+  const [pendingBalance, setPendingBalance] = useState<number>(350.0);
+  const [isClaiming, setIsClaiming] = useState<boolean>(false);
+
+  const handleConnectWallet = async (walletType: string) => {
+    setWalletState('connecting');
+    toast.loading(`Đang kết nối tới ví ${walletType}...`, { id: 'web3-conn' });
+
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
+    const mockAddr = '0x71C244248888888888888888888888888888a8E9';
+    setWalletAddress(mockAddr);
+    setWalletState('connected');
+    toast.success(
+      `Kết nối ví MetaMask (${mockAddr.slice(0, 6)}...${mockAddr.slice(-4)}) thành công!`,
+      { id: 'web3-conn' }
+    );
+  };
+
+  const handleDisconnectWallet = () => {
+    setWalletState('disconnected');
+    setWalletAddress('');
+    toast.info('Đã ngắt kết nối ví Web3.');
+  };
+
+  const handleClaimRebate = async () => {
+    if (pendingBalance <= 0) {
+      toast.error('Không có số dư hoa hồng khả dụng để rút!');
+      return;
+    }
+    setIsClaiming(true);
+
+    toast.info('Vui lòng xác nhận giao dịch rút tiền trên ví của bạn...', { id: 'claim-tx' });
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    toast.loading(`Đang tương tác với Smart Contract rút $${pendingBalance.toFixed(2)} USDT...`, {
+      id: 'claim-tx'
+    });
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const randomHex = Array.from({ length: 64 }, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ).join('');
+    const mockTxHash = `0x${randomHex.slice(0, 60)}1d23`;
+
+    const newClaim: ClaimHistoryEntry = {
+      claimId: `CLM${Math.floor(100000 + Math.random() * 900000)}`,
+      walletAddress: walletAddress,
+      amount: pendingBalance.toFixed(2),
+      txHash: mockTxHash,
+      status: 'claimed',
+      requestedAt: new Date().toISOString(),
+      completedAt: new Date().toISOString(),
+      broker: selectedBroker === 'ALL' ? 'Exness' : selectedBroker
+    };
+
+    setClaims((prev) => [newClaim, ...prev]);
+    setPendingBalance(0);
+    setIsClaiming(false);
+    toast.success(
+      `Rút hoa hồng thành công! +$${newClaim.amount} USDT đã được chuyển về ví của bạn.`,
+      { id: 'claim-tx' }
+    );
+  };
+
   const fetchClaims = async () => {
     setIsLoading(true);
     try {
@@ -111,6 +180,163 @@ export default function ClaimsHistoryPage() {
             BSC và tổng hợp số lượng giao dịch rebate đã hoàn tất.
           </p>
         </div>
+
+        {/* Web3 Wallet panel */}
+        <Card className='border border-border bg-card shadow-2xl rounded-2xl overflow-hidden relative group animate-in slide-in-from-bottom-5 duration-700'>
+          <div className='absolute -bottom-10 -right-10 p-6 opacity-[0.03] pointer-events-none group-hover:scale-105 transition-all duration-500'>
+            <Icons.wallet className='size-80 text-primary' />
+          </div>
+
+          <CardHeader className='bg-muted/10 border-b border-border py-5 px-6'>
+            <CardTitle className='text-lg font-bold flex items-center gap-2'>
+              <Icons.wallet className='size-5 text-primary' />
+              Hệ Thống Rút Tiền Web3 Non-Custodial (BSC Smart Contract) 🪙
+            </CardTitle>
+            <CardDescription>
+              Kết nối ví điện tử cá nhân để thực hiện nhận hoa hồng (USDT) tự động, an toàn và minh
+              bạch tuyệt đối trên chuỗi khối BNB Smart Chain.
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className='p-6'>
+            {walletState === 'disconnected' && (
+              <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-6'>
+                <div className='space-y-2 max-w-xl'>
+                  <h4 className='text-sm font-extrabold text-foreground flex items-center gap-1.5'>
+                    <span className='size-2 rounded-full bg-red-500 animate-ping' />
+                    Ví của bạn chưa được kết nối!
+                  </h4>
+                  <p className='text-xs text-muted-foreground leading-relaxed'>
+                    Bạn cần liên kết ví cá nhân để hệ thống tự động giải ngân rebate trực tiếp.
+                    Zentrix hỗ trợ mọi loại ví chuẩn EVM chạy trên mạng lưới Binance Smart Chain.
+                  </p>
+                </div>
+                <div className='flex flex-wrap gap-3 shrink-0'>
+                  <Button
+                    onClick={() => handleConnectWallet('MetaMask')}
+                    className='bg-neutral-850 hover:bg-neutral-800 border border-border text-foreground font-bold text-xs h-11 px-4 rounded-xl gap-2 shadow-inner hover:scale-[1.01] active:scale-[0.99] transition-all'
+                  >
+                    <img
+                      src='https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595368449'
+                      className='size-4 shrink-0 filter invert'
+                      alt='meta'
+                    />
+                    Kết nối MetaMask
+                  </Button>
+                  <Button
+                    onClick={() => handleConnectWallet('Trust Wallet')}
+                    className='bg-neutral-850 hover:bg-neutral-800 border border-border text-foreground font-bold text-xs h-11 px-4 rounded-xl gap-2 shadow-inner hover:scale-[1.01] active:scale-[0.99] transition-all'
+                  >
+                    <img
+                      src='https://assets.coingecko.com/coins/images/12185/small/trust_wallet.png?1597818449'
+                      className='size-4 shrink-0'
+                      alt='trust'
+                    />
+                    Kết nối Trust Wallet
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {walletState === 'connecting' && (
+              <div className='py-8 text-center text-xs text-muted-foreground space-y-3 flex flex-col items-center justify-center'>
+                <Icons.spinner className='size-8 animate-spin text-primary' />
+                <p className='font-bold animate-pulse'>
+                  Đang xác minh chữ ký & mã hóa địa chỉ ví Web3...
+                </p>
+              </div>
+            )}
+
+            {walletState === 'connected' && (
+              <div className='grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch'>
+                {/* Left Side: Wallet details */}
+                <div className='md:col-span-6 space-y-5 flex flex-col justify-between'>
+                  <div className='space-y-3.5'>
+                    <div className='flex items-center gap-2'>
+                      <Badge className='bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-black text-[10px] rounded-full py-0.5 px-2.5 gap-1.5'>
+                        <span className='size-1.5 rounded-full bg-emerald-500' />
+                        Đã liên kết thành công
+                      </Badge>
+                      <Badge
+                        variant='outline'
+                        className='text-[10px] font-bold border-border py-0.5 px-2.5 text-muted-foreground bg-muted/20'
+                      >
+                        BSC Mainnet
+                      </Badge>
+                    </div>
+
+                    <div className='space-y-1.5'>
+                      <span className='text-[9px] uppercase font-bold text-muted-foreground tracking-wider block'>
+                        Địa Chỉ Ví Nhận Tiền
+                      </span>
+                      <div className='flex items-center gap-2 font-mono text-sm font-black text-foreground bg-muted/30 border border-border/80 rounded-xl p-3.5 shadow-inner'>
+                        <span className='truncate'>{walletAddress}</span>
+                        <Button
+                          size='icon'
+                          variant='ghost'
+                          onClick={() => handleCopyText(walletAddress, 'Đã sao chép địa chỉ ví!')}
+                          className='size-7 text-muted-foreground hover:text-primary rounded shrink-0'
+                        >
+                          <Icons.copy className='size-3.5' />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='flex items-center justify-between text-[11px] font-bold pt-4 border-t border-border/40'>
+                    <span className='text-muted-foreground'>Giao thức bảo mật:</span>
+                    <button
+                      onClick={handleDisconnectWallet}
+                      className='text-red-500 hover:text-red-400 hover:underline flex items-center gap-1 cursor-pointer transition-colors'
+                    >
+                      <Icons.close className='size-3' />
+                      Ngắt kết nối ví
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right Side: Claim Balance and button */}
+                <div className='md:col-span-6 flex flex-col justify-between border-t md:border-t-0 md:border-l border-border/60 pt-6 md:pt-0 md:pl-8 space-y-6'>
+                  <div className='bg-muted/20 border border-border/80 rounded-2xl p-5 space-y-2 shadow-sm'>
+                    <span className='text-[10px] uppercase font-black text-muted-foreground tracking-wider block'>
+                      Hoa Hồng Chờ Rút Khả Dụng (Pending Claim)
+                    </span>
+                    <div className='flex justify-between items-baseline'>
+                      <h3 className='text-3.5xl font-black font-mono text-primary'>
+                        ${pendingBalance.toFixed(2)} USDT
+                      </h3>
+                      <span className='text-xs font-semibold text-emerald-500 bg-emerald-500/10 py-0.5 px-2 rounded'>
+                        Mạng lưới BSC
+                      </span>
+                    </div>
+                  </div>
+
+                  <Button
+                    disabled={pendingBalance <= 0 || isClaiming}
+                    onClick={handleClaimRebate}
+                    className={`w-full font-black text-sm h-12 rounded-xl gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer ${
+                      pendingBalance > 0
+                        ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-primary/20'
+                        : 'bg-muted border border-border text-muted-foreground shadow-none'
+                    }`}
+                  >
+                    {isClaiming ? (
+                      <>
+                        <Icons.spinner className='size-4.5 animate-spin' />
+                        Đang ký giao dịch on-chain...
+                      </>
+                    ) : (
+                      <>
+                        <Icons.download className='size-4.5 animate-bounce' />
+                        Yêu cầu Rút về Ví (Claim Rebate)
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Filters Panel */}
         <Card className='border-border bg-card shadow-lg rounded-2xl p-4'>

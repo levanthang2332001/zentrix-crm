@@ -6,7 +6,7 @@ export async function getMyRates(
   tier: 'F0' | 'F1' | 'F2' = 'F2'
 ): Promise<MyRatesResponse> {
   try {
-    return await apiClient<MyRatesResponse>(`/user/rates`, {
+    return await apiClient<MyRatesResponse>(`/user/rates?tier=${tier}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   } catch {

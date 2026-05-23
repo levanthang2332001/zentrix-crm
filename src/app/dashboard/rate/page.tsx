@@ -20,6 +20,30 @@ export default function MyRatesPage() {
   const [rates, setRates] = useState<BrokerRate[]>([]);
   const userTier = (user?.publicMetadata?.tier as 'F0' | 'F1' | 'F2') || 'F2';
 
+  // Simulator Reactive States
+  const [simLots, setSimLots] = useState<number>(50);
+  const [simBrokerId, setSimBrokerId] = useState<string>('brk_exness');
+  const [simAsset, setSimAsset] = useState<string>('XAUUSD');
+  const [simTrader, setSimTrader] = useState<'self' | 'f1' | 'f2'>('self');
+
+  useEffect(() => {
+    if (userTier === 'F2') {
+      setSimTrader('self');
+    } else if (userTier === 'F1' && simTrader === 'f1') {
+      setSimTrader('self');
+    }
+  }, [userTier, simTrader]);
+
+  const getBrokerRatesForTier = (brokerId: string) => {
+    if (brokerId === 'brk_exness') {
+      return { f0: 50, f1: 30, f2: 15 };
+    } else if (brokerId === 'brk_xm') {
+      return { f0: 45, f1: 25, f2: 12 };
+    } else {
+      return { f0: 40, f1: 20, f2: 10 };
+    }
+  };
+
   const fetchRates = async () => {
     setIsLoading(true);
     try {
@@ -187,6 +211,434 @@ export default function MyRatesPage() {
             ))
           )}
         </div>
+
+        {/* Rebate Simulator Card */}
+        <Card className='border border-border bg-card shadow-2xl rounded-2xl overflow-hidden animate-in slide-in-from-bottom-5 duration-700'>
+          <CardHeader className='bg-muted/10 border-b border-border py-5 px-6'>
+            <CardTitle className='text-lg font-bold flex items-center gap-2'>
+              <Icons.adjustments className='size-5 text-primary' />
+              Công Cụ Mô Phỏng Chia Sẻ Hoa Hồng Đa Tầng (Rebate Simulator) 🧮
+            </CardTitle>
+            <CardDescription>
+              Nhập sản lượng giao dịch dự kiến và xem tỷ lệ phân bổ hoa hồng (USD) thực tế giữa các
+              cấp bậc đại lý (F0 / F1 / F2).
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='p-6 space-y-8'>
+            <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
+              {/* Left Column: Form Parameters */}
+              <div className='lg:col-span-5 space-y-6'>
+                {/* Select Broker */}
+                <div className='space-y-2'>
+                  <label className='text-xs uppercase font-extrabold text-muted-foreground block'>
+                    Sàn Broker Liên Kết
+                  </label>
+                  <select
+                    value={simBrokerId}
+                    onChange={(e) => setSimBrokerId(e.target.value)}
+                    className='w-full bg-muted/30 border border-border text-xs rounded-xl h-11 px-3.5 font-bold text-foreground focus:outline-none focus:border-primary'
+                  >
+                    <option value='brk_exness'>Exness Group (Max 50% Rebate)</option>
+                    <option value='brk_xm'>XM Global Ltd (Max 45% Rebate)</option>
+                    <option value='brk_icm'>IC Markets (Max 40% Rebate)</option>
+                  </select>
+                </div>
+
+                {/* Select Asset and Commission rate */}
+                <div className='space-y-2'>
+                  <label className='text-xs uppercase font-extrabold text-muted-foreground block'>
+                    Sản Phẩm & Phí Giao Dịch
+                  </label>
+                  <select
+                    value={simAsset}
+                    onChange={(e) => setSimAsset(e.target.value)}
+                    className='w-full bg-muted/30 border border-border text-xs rounded-xl h-11 px-3.5 font-bold text-foreground focus:outline-none focus:border-primary'
+                  >
+                    <option value='XAUUSD'>Vàng (XAUUSD) — Phí $15 / lot</option>
+                    <option value='EURUSD'>Forex (EURUSD, GBPUSD) — Phí $10 / lot</option>
+                    <option value='BTCUSD'>Tiền điện tử (BTCUSD) — Phí $25 / lot</option>
+                  </select>
+                </div>
+
+                {/* Simulated Lots (Volume) */}
+                <div className='space-y-3.5'>
+                  <div className='flex justify-between items-center'>
+                    <label className='text-xs uppercase font-extrabold text-muted-foreground block'>
+                      Sản Lượng Giao Dịch (Lots)
+                    </label>
+                    <span className='font-mono font-bold text-sm text-primary'>{simLots} Lots</span>
+                  </div>
+                  <div className='flex items-center gap-4'>
+                    <input
+                      type='range'
+                      min='1'
+                      max='1000'
+                      value={simLots}
+                      onChange={(e) => setSimLots(parseInt(e.target.value))}
+                      className='flex-1 accent-primary h-1.5 bg-muted rounded-lg appearance-none cursor-pointer'
+                    />
+                    <input
+                      type='number'
+                      min='1'
+                      max='1000'
+                      value={simLots}
+                      onChange={(e) =>
+                        setSimLots(Math.max(1, Math.min(1000, parseInt(e.target.value) || 1)))
+                      }
+                      className='w-20 bg-muted/30 border border-border text-xs rounded-xl h-9 text-center font-mono font-bold text-foreground focus:outline-none focus:border-primary'
+                    />
+                  </div>
+                </div>
+
+                {/* Trading Party (Who Traded) */}
+                <div className='space-y-2.5'>
+                  <label className='text-xs uppercase font-extrabold text-muted-foreground block'>
+                    Đối Tượng Thực Hiện Giao Dịch
+                  </label>
+                  <div className='grid grid-cols-3 gap-2.5'>
+                    <Button
+                      variant={simTrader === 'self' ? 'default' : 'outline'}
+                      onClick={() => setSimTrader('self')}
+                      className={`h-11 rounded-xl text-xs font-bold ${
+                        simTrader === 'self'
+                          ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/95'
+                          : 'border-border hover:bg-muted/10'
+                      }`}
+                    >
+                      Cá Nhân (Tôi)
+                    </Button>
+                    <Button
+                      variant={simTrader === 'f1' ? 'default' : 'outline'}
+                      disabled={userTier === 'F2' || userTier === 'F1'}
+                      onClick={() => setSimTrader('f1')}
+                      className={`h-11 rounded-xl text-xs font-bold ${
+                        simTrader === 'f1'
+                          ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/95'
+                          : 'border-border hover:bg-muted/10'
+                      }`}
+                    >
+                      Downline F1
+                    </Button>
+                    <Button
+                      variant={simTrader === 'f2' ? 'default' : 'outline'}
+                      disabled={userTier === 'F2'}
+                      onClick={() => setSimTrader('f2')}
+                      className={`h-11 rounded-xl text-xs font-bold ${
+                        simTrader === 'f2'
+                          ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/95'
+                          : 'border-border hover:bg-muted/10'
+                      }`}
+                    >
+                      Downline F2
+                    </Button>
+                  </div>
+                  {userTier === 'F2' && (
+                    <span className='text-[10px] text-amber-500 font-semibold leading-normal block italic mt-1'>
+                      ⚠️ Cấp F2 chỉ có thể mô phỏng hiệu suất giao dịch cá nhân.
+                    </span>
+                  )}
+                  {userTier === 'F1' && (
+                    <span className='text-[10px] text-amber-500 font-semibold leading-normal block italic mt-1'>
+                      ⚠️ Cấp F1 chỉ có thể mô phỏng giao dịch cá nhân và tuyến dưới F2.
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: Calculated Splits & visual graphs */}
+              <div className='lg:col-span-7 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-border/60 pt-6 lg:pt-0 lg:pl-8 space-y-6'>
+                {/* Total commission summary */}
+                <div className='bg-muted/20 border border-border/85 rounded-2xl p-5 space-y-1.5 shadow-sm'>
+                  <span className='text-[10px] uppercase font-black text-muted-foreground tracking-wider block'>
+                    Tổng Phí Giao Dịch Phát Sinh
+                  </span>
+                  <div className='flex justify-between items-baseline'>
+                    <h3 className='text-3xl font-black font-mono text-foreground'>
+                      $
+                      {(
+                        simLots * (simAsset === 'XAUUSD' ? 15 : simAsset === 'EURUSD' ? 10 : 25)
+                      ).toFixed(2)}
+                    </h3>
+                    <span className='text-xs font-semibold text-muted-foreground'>
+                      ({simLots} lots x $
+                      {simAsset === 'XAUUSD' ? 15 : simAsset === 'EURUSD' ? 10 : 25}/lot)
+                    </span>
+                  </div>
+                </div>
+
+                {/* Segmented Progress Bar */}
+                <div className='space-y-3.5'>
+                  <div className='flex justify-between items-center text-xs font-extrabold uppercase tracking-wider text-muted-foreground'>
+                    <span>Phân bổ hoa hồng (Rebate Split)</span>
+                    <span className='text-primary font-mono'>100% Phí</span>
+                  </div>
+
+                  {/* Multi-segment Bar */}
+                  {(() => {
+                    const brRates = getBrokerRatesForTier(simBrokerId);
+                    const assetVal = simAsset === 'XAUUSD' ? 15 : simAsset === 'EURUSD' ? 10 : 25;
+                    const totalC = simLots * assetVal;
+
+                    // Compute percentages based on Trader selection
+                    let f2Pct = 0;
+                    let f1Pct = 0;
+                    let f0Pct = 0;
+
+                    if (simTrader === 'self') {
+                      if (userTier === 'F0') {
+                        f0Pct = brRates.f0; // F0 gets their full rate
+                      } else if (userTier === 'F1') {
+                        f1Pct = brRates.f1; // F1 gets their rate
+                        f0Pct = brRates.f0 - brRates.f1; // F0 gets override
+                      } else {
+                        f2Pct = brRates.f2; // F2 gets their rate
+                        f1Pct = brRates.f1 - brRates.f2; // F1 gets override
+                        f0Pct = brRates.f0 - brRates.f1; // F0 gets override
+                      }
+                    } else if (simTrader === 'f1') {
+                      f1Pct = brRates.f1; // F1 gets rate
+                      f0Pct = brRates.f0 - brRates.f1; // F0 override
+                    } else if (simTrader === 'f2') {
+                      f2Pct = brRates.f2; // F2 gets rate
+                      f1Pct = brRates.f1 - brRates.f2; // F1 override
+                      f0Pct = brRates.f0 - brRates.f1; // F0 override
+                    }
+
+                    const platformPct = 100 - brRates.f0;
+
+                    const f2Val = (f2Pct / 100) * totalC;
+                    const f1Val = (f1Pct / 100) * totalC;
+                    const f0Val = (f0Pct / 100) * totalC;
+                    const platformVal = (platformPct / 100) * totalC;
+
+                    return (
+                      <div className='space-y-5'>
+                        {/* Segment labels/legend dynamically adjusted for roles */}
+                        <div className='flex flex-wrap gap-4 text-[10px] font-black uppercase tracking-wider text-muted-foreground bg-muted/5 p-3 rounded-xl border border-border/40'>
+                          <div className='flex items-center gap-1.5'>
+                            <span
+                              className={`size-2 rounded-full ${userTier === 'F0' ? 'bg-muted-foreground/30' : 'bg-emerald-500 animate-pulse'}`}
+                            />
+                            <span>
+                              {userTier === 'F2'
+                                ? 'F2 Trader (Bạn)'
+                                : userTier === 'F1'
+                                  ? 'Trader F2'
+                                  : 'Trader F2 (Ẩn)'}
+                            </span>
+                          </div>
+                          <div className='flex items-center gap-1.5'>
+                            <span
+                              className={`size-2 rounded-full ${userTier === 'F2' ? 'bg-muted-foreground/30' : 'bg-violet-500 animate-pulse'}`}
+                            />
+                            <span>
+                              {userTier === 'F2'
+                                ? 'Đại lý F1 (Khóa)'
+                                : userTier === 'F1'
+                                  ? 'Sub-IB F1 (Bạn)'
+                                  : 'Sub-IB F1'}
+                            </span>
+                          </div>
+                          <div className='flex items-center gap-1.5'>
+                            <span
+                              className={`size-2 rounded-full ${userTier === 'F0' ? 'bg-amber-500 animate-pulse' : 'bg-muted-foreground/30'}`}
+                            />
+                            <span>
+                              {userTier === 'F0' ? 'Master F0 (Bạn)' : 'Master F0 (Khóa)'}
+                            </span>
+                          </div>
+                          <div className='flex items-center gap-1.5 ml-auto'>
+                            <span className='size-2 rounded-full bg-neutral-700' />
+                            <span>Broker / Platform</span>
+                          </div>
+                        </div>
+
+                        <div className='w-full h-4 bg-muted rounded-full overflow-hidden flex shadow-inner'>
+                          {f2Pct > 0 && (
+                            <div
+                              style={{ width: `${f2Pct}%` }}
+                              className={`h-full transition-all duration-300 ${userTier === 'F0' ? 'bg-muted-foreground/20' : 'bg-emerald-500'}`}
+                              title={userTier === 'F0' ? 'F2 Trader (Ẩn)' : `F2 Trader: ${f2Pct}%`}
+                            />
+                          )}
+                          {f1Pct > 0 && (
+                            <div
+                              style={{ width: `${f1Pct}%` }}
+                              className={`h-full transition-all duration-300 ${userTier === 'F2' ? 'bg-muted-foreground/15' : 'bg-violet-500'}`}
+                              title={userTier === 'F2' ? 'Đại lý F1 (Khóa)' : `F1: ${f1Pct}%`}
+                            />
+                          )}
+                          {f0Pct > 0 && (
+                            <div
+                              style={{ width: `${f0Pct}%` }}
+                              className={`h-full transition-all duration-300 ${userTier !== 'F0' ? 'bg-muted-foreground/15' : 'bg-amber-500'}`}
+                              title={userTier !== 'F0' ? 'Master F0 (Khóa)' : `F0: ${f0Pct}%`}
+                            />
+                          )}
+                          <div
+                            style={{ width: `${platformPct}%` }}
+                            className='h-full bg-neutral-700/80 transition-all duration-300'
+                            title={`Platform: ${platformPct}%`}
+                          />
+                        </div>
+
+                        {/* Detail Cards */}
+                        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                          {/* F2 Split Card */}
+                          {userTier !== 'F0' ? (
+                            <div
+                              className={`p-4 border rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-sm ${
+                                f2Pct > 0
+                                  ? 'bg-emerald-500/5 border-emerald-500/30'
+                                  : 'bg-muted/10 border-border/40 opacity-40'
+                              }`}
+                            >
+                              <div className='space-y-0.5'>
+                                <span className='text-[9px] uppercase font-bold text-muted-foreground block'>
+                                  Trader F2 Nhận ({f2Pct}%) {userTier === 'F2' && '(Bạn)'}
+                                </span>
+                                <h4 className='text-xl font-black font-mono text-emerald-500'>
+                                  ${f2Val.toFixed(2)}
+                                </h4>
+                              </div>
+                              <span className='text-[9px] text-muted-foreground mt-2 leading-none font-medium'>
+                                Hoàn phí tự động vào ví
+                              </span>
+                            </div>
+                          ) : (
+                            <div className='p-4 border border-border/40 bg-muted/10 opacity-50 rounded-2xl flex flex-col justify-between shadow-sm relative overflow-hidden group'>
+                              <div className='absolute inset-0 bg-background/5 backdrop-blur-[0.5px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                                <span className='text-[9px] font-black text-muted-foreground bg-muted border border-border py-1 px-2.5 rounded-full flex items-center gap-1'>
+                                  <Icons.lock className='size-3' />
+                                  Bảo mật tuyến dưới
+                                </span>
+                              </div>
+                              <div className='space-y-0.5'>
+                                <span className='text-[9px] uppercase font-bold text-muted-foreground block flex items-center gap-1'>
+                                  Trader F2 Nhận{' '}
+                                  <Icons.lock className='size-2.5 text-muted-foreground' />
+                                </span>
+                                <h4 className='text-xl font-black font-mono text-muted-foreground/60'>
+                                  $•••
+                                </h4>
+                              </div>
+                              <span className='text-[9px] text-muted-foreground mt-2 leading-none font-medium italic'>
+                                Ẩn thông tin giao dịch F2
+                              </span>
+                            </div>
+                          )}
+
+                          {/* F1 Split Card */}
+                          {userTier === 'F2' ? (
+                            <div className='p-4 border border-border/40 bg-muted/10 opacity-50 rounded-2xl flex flex-col justify-between shadow-sm relative overflow-hidden group'>
+                              <div className='absolute inset-0 bg-background/5 backdrop-blur-[0.5px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                                <span className='text-[9px] font-black text-amber-500 bg-amber-500/10 border border-amber-500/25 py-1 px-2.5 rounded-full flex items-center gap-1'>
+                                  <Icons.lock className='size-3' />
+                                  Bảo mật cấp trên
+                                </span>
+                              </div>
+                              <div className='space-y-0.5'>
+                                <span className='text-[9px] uppercase font-bold text-muted-foreground block flex items-center gap-1'>
+                                  Đại lý F1 Nhận{' '}
+                                  <Icons.lock className='size-2.5 text-muted-foreground' />
+                                </span>
+                                <h4 className='text-xl font-black font-mono text-muted-foreground/60'>
+                                  $•••
+                                </h4>
+                              </div>
+                              <span className='text-[9px] text-muted-foreground mt-2 leading-none font-medium italic'>
+                                Hoa hồng F1 được ẩn
+                              </span>
+                            </div>
+                          ) : (
+                            <div
+                              className={`p-4 border rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-sm ${
+                                f1Pct > 0
+                                  ? 'bg-violet-500/5 border-violet-500/30'
+                                  : 'bg-muted/10 border-border/40 opacity-40'
+                              }`}
+                            >
+                              <div className='space-y-0.5'>
+                                <span className='text-[9px] uppercase font-bold text-muted-foreground block'>
+                                  Đại lý F1 Nhận ({f1Pct}%) {userTier === 'F1' && '(Bạn)'}
+                                </span>
+                                <h4 className='text-xl font-black font-mono text-violet-400'>
+                                  ${f1Val.toFixed(2)}
+                                </h4>
+                              </div>
+                              <span className='text-[9px] text-muted-foreground mt-2 leading-none font-medium'>
+                                Chiết khấu chênh lệch F1
+                              </span>
+                            </div>
+                          )}
+
+                          {/* F0 Split Card */}
+                          {userTier !== 'F0' ? (
+                            <div className='p-4 border border-border/40 bg-muted/10 opacity-50 rounded-2xl flex flex-col justify-between shadow-sm relative overflow-hidden group'>
+                              <div className='absolute inset-0 bg-background/5 backdrop-blur-[0.5px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                                <span className='text-[9px] font-black text-amber-500 bg-amber-500/10 border border-amber-500/25 py-1 px-2.5 rounded-full flex items-center gap-1'>
+                                  <Icons.lock className='size-3' />
+                                  Bảo mật cấp trên
+                                </span>
+                              </div>
+                              <div className='space-y-0.5'>
+                                <span className='text-[9px] uppercase font-bold text-muted-foreground block flex items-center gap-1'>
+                                  Đại lý F0 Nhận{' '}
+                                  <Icons.lock className='size-2.5 text-muted-foreground' />
+                                </span>
+                                <h4 className='text-xl font-black font-mono text-muted-foreground/60'>
+                                  $•••
+                                </h4>
+                              </div>
+                              <span className='text-[9px] text-muted-foreground mt-2 leading-none font-medium italic'>
+                                Hoa hồng F0 được ẩn
+                              </span>
+                            </div>
+                          ) : (
+                            <div
+                              className={`p-4 border rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-sm ${
+                                f0Pct > 0
+                                  ? 'bg-amber-500/5 border-amber-500/30'
+                                  : 'bg-muted/10 border-border/40 opacity-40'
+                              }`}
+                            >
+                              <div className='space-y-0.5'>
+                                <span className='text-[9px] uppercase font-bold text-muted-foreground block'>
+                                  Đại lý F0 Nhận ({f0Pct}%) (Bạn)
+                                </span>
+                                <h4 className='text-xl font-black font-mono text-amber-500'>
+                                  ${f0Val.toFixed(2)}
+                                </h4>
+                              </div>
+                              <span className='text-[9px] text-muted-foreground mt-2 leading-none font-medium'>
+                                Chiết khấu chênh lệch F0
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Platform Share Card */}
+                          <div className='p-4 border border-border/60 bg-neutral-900/20 rounded-2xl flex flex-col justify-between shadow-sm'>
+                            <div className='space-y-0.5'>
+                              <span className='text-[9px] uppercase font-bold text-muted-foreground block'>
+                                Broker Giữ Lại ({platformPct}%)
+                              </span>
+                              <h4 className='text-xl font-black font-mono text-neutral-400'>
+                                ${platformVal.toFixed(2)}
+                              </h4>
+                            </div>
+                            <span className='text-[9px] text-muted-foreground mt-2 leading-none font-medium'>
+                              Platform fee & Spread
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Tier Advantage Matrix */}
         <Card className='bg-card border border-border shadow-xl rounded-2xl overflow-hidden'>

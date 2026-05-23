@@ -12,6 +12,38 @@ import { useUser, useAuth } from '@clerk/nextjs';
 import { getNetworkData } from '@/features/network/api/service';
 import type { NetworkMember } from '@/features/network/api/types';
 import { toast } from 'sonner';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  LineChart,
+  Line
+} from 'recharts';
+
+const growthData = [
+  { month: 'Th. 12', F1: 15, F2: 24, total: 39 },
+  { month: 'Th. 1', F1: 22, F2: 40, total: 62 },
+  { month: 'Th. 2', F1: 28, F2: 55, total: 83 },
+  { month: 'Th. 3', F1: 35, F2: 78, total: 113 },
+  { month: 'Th. 4', F1: 42, F2: 104, total: 146 },
+  { month: 'Th. 5', F1: 52, F2: 138, total: 190 }
+];
+
+const volumeData = [
+  { month: 'Th. 12', F1_Vol: 1250, F2_Vol: 1800 },
+  { month: 'Th. 1', F1_Vol: 2100, F2_Vol: 3200 },
+  { month: 'Th. 2', F1_Vol: 1900, F2_Vol: 2800 },
+  { month: 'Th. 3', F1_Vol: 3400, F2_Vol: 4500 },
+  { month: 'Th. 4', F1_Vol: 4100, F2_Vol: 5800 },
+  { month: 'Th. 5', F1_Vol: 5200, F2_Vol: 7900 }
+];
 
 export default function NetworkPage() {
   const { user } = useUser();
@@ -276,6 +308,155 @@ export default function NetworkPage() {
                   </div>
                 </Card>
               </div>
+            </div>
+
+            {/* Affiliate Interactive Analytics Panel */}
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in slide-in-from-bottom-5 duration-700 delay-100'>
+              {/* Line Chart: Downline Growth */}
+              <Card className='border border-border bg-card shadow-xl rounded-2xl p-6 space-y-4'>
+                <div className='space-y-1.5'>
+                  <CardTitle className='text-base font-bold flex items-center gap-2'>
+                    <Icons.teams className='size-5 text-primary' />
+                    Tăng Trưởng Hệ Thống Tuyến Dưới (Downline Growth)
+                  </CardTitle>
+                  <CardDescription className='text-xs text-muted-foreground'>
+                    Số lượng thành viên tích lũy F1 và F2 gia nhập hệ thống trong 6 tháng qua.
+                  </CardDescription>
+                </div>
+                <div className='h-72 w-full pt-4'>
+                  <ResponsiveContainer width='100%' height='100%'>
+                    <LineChart
+                      data={growthData}
+                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    >
+                      <CartesianGrid
+                        strokeDasharray='3 3'
+                        stroke='var(--border)'
+                        opacity={0.2}
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey='month'
+                        stroke='var(--muted-foreground)'
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis
+                        stroke='var(--muted-foreground)'
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          background: 'var(--card)',
+                          borderColor: 'var(--border)',
+                          borderRadius: '12px',
+                          fontSize: '11px'
+                        }}
+                      />
+                      <Legend
+                        verticalAlign='top'
+                        height={36}
+                        iconType='circle'
+                        iconSize={8}
+                        wrapperStyle={{ fontSize: '11px', fontWeight: 'bold' }}
+                      />
+                      <Line
+                        type='monotone'
+                        dataKey='F1'
+                        name='Downline F1 Trực tiếp'
+                        stroke='var(--primary)'
+                        strokeWidth={2.5}
+                        dot={{ r: 4, strokeWidth: 1 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type='monotone'
+                        dataKey='F2'
+                        name='Downline F2 Gián tiếp'
+                        stroke='var(--violet-500)'
+                        strokeWidth={2.5}
+                        dot={{ r: 4, strokeWidth: 1 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+
+              {/* Bar Chart: Lot Volume Distribution */}
+              <Card className='border border-border bg-card shadow-xl rounded-2xl p-6 space-y-4'>
+                <div className='space-y-1.5'>
+                  <CardTitle className='text-base font-bold flex items-center gap-2'>
+                    <Icons.trendingUp className='size-5 text-primary' />
+                    Khối Lượng Giao Dịch Hàng Tháng (Volume Traded)
+                  </CardTitle>
+                  <CardDescription className='text-xs text-muted-foreground'>
+                    Tổng lot sản lượng giao dịch đóng góp hàng tháng bởi downline F1 và F2.
+                  </CardDescription>
+                </div>
+                <div className='h-72 w-full pt-4'>
+                  <ResponsiveContainer width='100%' height='100%'>
+                    <BarChart
+                      data={volumeData}
+                      margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                    >
+                      <CartesianGrid
+                        strokeDasharray='3 3'
+                        stroke='var(--border)'
+                        opacity={0.2}
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey='month'
+                        stroke='var(--muted-foreground)'
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis
+                        stroke='var(--muted-foreground)'
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(v) => `$${v}`}
+                      />
+                      <Tooltip
+                        formatter={(value) => [`$${value}`, undefined]}
+                        contentStyle={{
+                          background: 'var(--card)',
+                          borderColor: 'var(--border)',
+                          borderRadius: '12px',
+                          fontSize: '11px'
+                        }}
+                      />
+                      <Legend
+                        verticalAlign='top'
+                        height={36}
+                        iconType='circle'
+                        iconSize={8}
+                        wrapperStyle={{ fontSize: '11px', fontWeight: 'bold' }}
+                      />
+                      <Bar
+                        dataKey='F1_Vol'
+                        name='Sản lượng F1 (USD)'
+                        fill='var(--primary)'
+                        radius={[4, 4, 0, 0]}
+                        maxBarSize={35}
+                      />
+                      <Bar
+                        dataKey='F2_Vol'
+                        name='Sản lượng F2 (USD)'
+                        fill='var(--violet-500)'
+                        radius={[4, 4, 0, 0]}
+                        maxBarSize={35}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
             </div>
 
             {/* Downlines Directory Table */}

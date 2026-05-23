@@ -50,33 +50,14 @@ export const navGroups: NavGroup[] = [
             icon: 'history'
           },
           {
-            title: 'Biến Động Số Dư',
+            title: 'Partner',
             url: '/dashboard/history/events',
-            icon: 'page'
+            icon: 'teams'
           },
           {
             title: 'Rút Tiền',
             url: '/dashboard/rebate/withdraw',
             icon: 'download'
-          }
-        ]
-      },
-      {
-        title: 'Mạng Lưới',
-        url: '#',
-        icon: 'teams',
-        isActive: true,
-        items: [
-          {
-            title: 'Thành Viên',
-            url: '/dashboard/network',
-            icon: 'teams'
-          },
-          {
-            title: 'Sơ Đồ Cây',
-            url: '/dashboard/network/tree',
-            icon: 'galleryVerticalEnd',
-            access: { role: ['F0', 'F1'] }
           }
         ]
       },
